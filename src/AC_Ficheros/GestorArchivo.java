@@ -42,7 +42,7 @@ public class GestorArchivo {
                 Informacion[0] = "U" + ( 100 + CantidadUsuarios );
             }
                 for (String usuario : usuarios) {
-                    if (usuario.equals(Informacion[0])) {
+                    if (usuario.equalsIgnoreCase(Informacion[0])) {
                     System.out.println("Usuario existe");
                     break;
                     }
@@ -68,7 +68,7 @@ public class GestorArchivo {
 
         while (reader.ready()){
 
-            String[] linea = reader.readLine().split(" ");
+            String[] linea = reader.readLine().toUpperCase().split(" ");
             usuarios.add(linea[0]);
             informacion.add(Arrays.copyOfRange(linea,1,linea.length));
 

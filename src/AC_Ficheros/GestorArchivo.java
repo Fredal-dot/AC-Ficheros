@@ -158,6 +158,7 @@ public class GestorArchivo {
             }
         }
         BorrarLineasDuplicadas();
+        IO.println("Se han encontrado " + Files.lines(UbicacionArchivo).count() + " parejas");
     }
 
     public void BorrarLineasDuplicadas() throws FileNotFoundException,IOException {

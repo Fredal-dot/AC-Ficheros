@@ -28,23 +28,34 @@ public class GestorArchivo {
 
         Fichero = new File(fichero);
         if ( Fichero.exists()) writer  = new BufferedWriter(new FileWriter(fichero,true));
-        else writer  = new BufferedWriter(new FileWriter(fichero));
+        else{
+            if ( !Fichero.exists() || !Fichero.canRead()){
+                throw new RuntimeException("El archivo no es leible o no existe");
+            }
 
-        Incializar();
+
+        }
+
+        if (Fichero.length() > 10000){
+            throw new RuntimeException("El archivo supera el maximo soportado de 10000 bytes");
+        }
+
+        Inicializar();
 
     }
 
     public void agregarUsuario(String Datos) throws IOException {
 
-            String[] Informacion = Datos.split(" ");
+            String[] Informacion = Datos.toUpperCase().split(" ");
+
+            if (Informacion.length < 2) throw new RuntimeException("No se puede agregar un usuario sin hobbies");
 
             if (!ComprobarUsuario(Informacion[0])){
                 Informacion[0] = "U" + ( 100 + CantidadUsuarios );
             }
                 for (String usuario : usuarios) {
                     if (usuario.equalsIgnoreCase(Informacion[0])) {
-                    System.out.println("Usuario existe");
-                    break;
+                    throw new RuntimeException("Este Usuario ya existe");
                     }
                 }
 
@@ -61,9 +72,12 @@ public class GestorArchivo {
 
     }
 
-    public void Incializar() throws IOException {
-        reader = new BufferedReader(new FileReader(Fichero));
-
+    public void Inicializar() throws IOException {
+        try {
+            reader = new BufferedReader(new FileReader(Fichero));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("El archivo no ha sido encontrado");
+        }
         CantidadUsuarios = (int) Files.lines(Fichero.toPath()).count();
 
         while (reader.ready()){
@@ -149,8 +163,11 @@ public class GestorArchivo {
     public void BorrarLineasDuplicadas() throws FileNotFoundException,IOException {
         StringBuilder LineasCorrectas = new StringBuilder();
         List<String> LineasArchivo = Files.readAllLines(UbicacionArchivo);
-        EscritorConcordancia = new BufferedWriter(new FileWriter(ArchivoConcordancia));
-
+        try {
+            EscritorConcordancia = new BufferedWriter(new FileWriter(ArchivoConcordancia));
+        } catch (IOException e) {
+            throw new RuntimeException("No se ha podido crear el archivo de concordancia");
+        }
         Set<String> lineasUnicas = new LinkedHashSet<>();
         for (String linea : LineasArchivo){
             String[] Datos = linea.split(" ");

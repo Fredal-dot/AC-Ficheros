@@ -1,11 +1,18 @@
 package AC_Ficheros;
 
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Principal {
     public static void main() throws IOException {
         String Opcion = "";
+        GestorArchivo gestor;
+
+        String Archivo = IO.readln("Ingrese el archivo de usuarios ( actualmente solo valido usuarios.txt ): ");
+        if (  Archivo == null ||Archivo.isBlank()){
+            throw new RuntimeException("No se ha insertado un nombre de archivo");
+        }
 
         while (!Opcion.equals("4")) {
             System.out.println("\n=============== Menu Principal ===============");
@@ -16,7 +23,8 @@ public class Principal {
             System.out.println("=============== Menu Principal ===============");
 
             Opcion = IO.readln("\nIngresa tu opcion: ");
-            GestorArchivo gestor = new GestorArchivo("src\\AC_FICHEROS\\usuarios.txt");
+
+                gestor = new GestorArchivo("src\\AC_FICHEROS\\"+Archivo);
 
             switch (Opcion) {
                 case "1" -> {
